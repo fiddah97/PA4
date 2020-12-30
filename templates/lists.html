@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{url_for('home')}}">Home</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{{url_for('logout')}}">Log out</a>
+        </li>
+        </ul>
+    </div>
+    </nav>
+<div class="bg-light p-3 card table-container">
+    <h1 class="border-bottom mb-5">My lists</h1>
+
+    <table class="table table-light table-striped col-md-12">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <!-- <th scope="col">ID</th> -->
+            <th scope="col">list name</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        {% for ID,list_ in todolist.items() %}
+      <tr>
+        <td scope="col">{{loop.index}}</td>
+        <td scope="col"><a href="{{url_for('tasks_')}}">{{list_.listname}}</a></td>
+       
+        <td scope="col" >
+            <a href="{{url_for('editlist', id = ID,_method='POST')}}" class="btn tab-btn btn-primary"><i class="fas fa-edit"></i><span class="hidden">Edit</span></a>
+          <a href="{{url_for('deletelist', id = ID ,_method='GET')}}" class="btn tab-btn btn-danger"><i class="fas fa-trash-alt"></i><span class="hidden">Delete</span></a>
+        </td>
+      </tr>
+      {% endfor %}
+
+  </table>
+</div>
+<a class="btn btn-info" href="{{url_for('add_list_')}}" role="button">creat new list</a>
+{% endblock %}

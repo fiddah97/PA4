@@ -1,0 +1,31 @@
+{%extends 'base.html'%}
+
+{%block content%}
+
+<div class="container">  
+    <form method="post">
+        
+        <div class="form-group">
+            <label for="name"> Name</label>
+            <input type="text" value="{{task.name}}" class="form-control" name="name" id="name" placeholder="">
+            <small id="emailHelpId" class="form-text text-muted">Enter  name</small>
+          </div>
+          <!-- <div class="form-group">
+            <label for="status">status</label>
+            <input type="text"value="{{task.status}}"  class="form-control" name="status" id="status" placeholder="">
+            <small id="emailHelpId" class="form-text text-muted">Enter status</small>
+          </div> -->
+          <!-- <div class="form-group">
+            <label for="priority">priority</label>
+            <input type="text" value="{{task.priority}}" class="form-control" name="priority" id="priority" placeholder="">
+            <small id="emailHelpId" class="form-text text-muted">Enter priority</small>
+          </div> -->
+          <div class="form-group">
+            <label for="description">description</label>
+            <input type="text" value="{{task.description}}" class="form-control" name="description" id="description" placeholder="">
+            <small id="emailHelpId" class="form-text text-muted">Enter description</small>
+          </div>
+          <button class="btn btn-primary" type="submit">Add </button>
+    </form> 
+</div>
+{%endblock%}
