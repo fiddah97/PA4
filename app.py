@@ -1,13 +1,11 @@
-from flask import Flask,render_template,url_for,redirect,session,flash,request
+from flask import Flask,render_template,url_for,redirect,session,flash,request,blueprints
 from tasklists import TaskList,Task,Status,Priority
 from functools import wraps
 from data import generate_tasklists,Task,generate_lists
 from enum import Enum
 from lists import List
-
-#create flask app
-app=Flask(__name__)
-app.secret_key = '&*&*15DFDJ'
+from sigup import RegistrationForm
+from login import LoginForm
 
 #Generate Dummy data
 tasks_list = generate_tasklists() #it contain the tasks for the list
@@ -27,38 +25,29 @@ users = []
 users.append(User(id=1, username='Fiddah', password='1234'))
 users.append(User(id=2, username= 'areej',password='131314'))
 
-#define log in required function
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if 'user' in session:
-            return f(*args, **kwargs)
-        # else:
-        #     flash('You need to login first.')  #the flash did not work
-        #     return redirect(url_for('login'))  
-    return wrap
 
+    # create the Flask
+app = Flask(__name__)
+app.secret_key = '&*&*15DFDJ'
 
-#define log out route
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for("home"))
-
-#define route to home page
+    #define route to home page
 @app.route('/')
-# @login_required
 def home():
     return render_template('base.html')
 
-#define log in route
-@app.route("/login", methods = ["POST" , "GET"])
-def login():
-    if request.method == 'POST':
-        session.pop('user_id', None)
+@app.route('/profile')
+def profile():
+    form = LoginForm()
+    username= form.name.data
+    return render_template('profile.html',form=form,username=username)
 
-        username = request.form['username']
-        password = request.form['password']
+@app.route('/login', methods =['POST','GET'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        # read values from the login form
+        username= form.name.data
+        password = form.password.data
         
         user = [x for x in users if x.username == username][0]
         if user and user.password == password:
@@ -66,14 +55,38 @@ def login():
             return redirect(url_for('lists'))
 
         return redirect(url_for('login'))
-
-    return render_template('login.html')
   
+    return render_template('login.html',form=form,title=login)
+    
 
-#define lists route to show the lists
-@app.route('/lists')
-def lists():
-    return render_template('lists.html',todolist= lists_.get_todolist())
+
+@app.route('/session')
+def show_session():
+    return dict(session)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+
+    # redirect to index
+    return redirect("/")
+
+@app.route('/register',methods=['POST','GET'])
+def registration():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        return redirect(url_for('home'))
+    return render_template('register.html',form=form)
+
+
+#define log in required function
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'user' in session:
+            return f(*args, **kwargs)
+    return wrap
+
 
 #define tasks route to show the tasks
 @app.route('/tasks')
@@ -125,19 +138,19 @@ def edit(id):
         task = tasks_list.get_task_by_id(id)
         return render_template('edit.html',task = task)
 
+
+#define lists route to show the lists
+@app.route('/lists')
+def lists():
+    return render_template('lists.html',todolist= lists_.get_todolist())
+
+
 @app.route('/deletelist/<int:id>',methods = ['GET','POST'])
 def deletelist(id):
     id =int(id)
     lists_.remove_list(id)
     return redirect(url_for('lists'))
 
-
-# @app.route('/veiwlist/<int:id>',methods = ['GET','POST'])
-# def veiw_lists(id):
-#     id =int(id)
-#     lists_.get_list_by_id(id)
-#     list_=lists_.value_of_list(id)
-#     return render_template('viewlist.html',taskslists= list_.get_taskslists())
 
 @app.route('/editlist/<int:id>' , methods = ["POST", "GET"])
 def editlist(id):
@@ -150,6 +163,7 @@ def editlist(id):
         list_ = lists_.get_list_by_id(id)
         return render_template('editlist.html',list_=list_)
 
+
 @app.route('/add_list',methods =['GET','POST'])
 def add_list_():
     if request.method == 'POST':
@@ -159,3 +173,13 @@ def add_list_():
         return render_template('lists.html',todolist= lists_.get_todolist())
     else:
         return render_template('addlist.html')
+
+
+# # @app.route('/veiwlist/<int:id>',methods = ['GET','POST'])
+# # def veiw_lists(id):
+# #     id =int(id)
+# #     lists_.get_list_by_id(id)
+# #     list_=lists_.value_of_list(id)
+# #     return render_template('viewlist.html',taskslists= list_.get_taskslists())
+
+
