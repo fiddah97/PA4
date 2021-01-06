@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>register</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    
+  <section id="register-warp">
+    <div class="col-md-8 m-auto card card-body bg-light">
+        <form action="" method="POST">
+            <!-- form.hidden_tag() => for CSRF Purpose "Security" -->
+            <fieldset class="form-group">
+                {{ form.hidden_tag() }}
+                <legend class="border-bottom mb-4">Join Now</legend>
+                <div class="form-group">
+                    <!-- Flask form label -->
+                    {{form.username.label(class="col-form-label")}}
+                    <!-- Flask form attribute -->
+                    {{form.username(class="form-control")}}
+                  <small id="helpId" class="text-muted">Please Enter Your Name</small>
+                </div>
+                
+                <div class="form-group">
+                    <!-- Flask form label -->
+                    {{form.password.label(class="col-form-label")}}
+                    <!-- Flask form attribute -->
+                    {{form.password(class="form-control")}}
+                  <small id="helpId" class="text-muted">Please Enter Your password</small>
+                </div>
+                <div class="form-group">
+                    <!-- Flask form label -->
+                    {{form.confirm_password.label(class="col-form-label")}}
+                    <!-- Flask form attribute -->
+                    {{form.confirm_password(class="form-control")}}
+                  <small id="helpId" class="text-muted">Please Enter Your Email</small>
+                </div>
+                <div class="form-group">
+                    <!-- Flask Submit button -->
+                    {{form.submit(class="btn btn-success")}}
+                </div>
+            </fieldset>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">Do you have an account ?! <a href="{{url_for('login')}}"> Login Now</a></small>
+        </div>
+    </div>
+
+</section>
+<a class="btn btn-Success" href="{{url_for('home')}}" role="button">go back</a>
+</body>
+</html>
+
